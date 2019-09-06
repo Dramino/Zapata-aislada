@@ -23,6 +23,13 @@
 \newcommand\myZ{6}       % Momento alrdedeor del eje Y
 \newcommand\pZ{90}       % Carga axial
 \newcommand\fcCarga{1.4} % Factor de carga
+%Datos de armado
+\newcommand\VarX{5}      % Número de varilla
+\newcommand\distVarX{10} % Distancia 
+\newcommand\VarY{5}      % Número de varilla
+\newcommand\distVarY{10} % Distancia
+
+
 
 %Peralte efectivo
 \FPeval{\dZ}{round(\hZ-\rZ,2)}
@@ -152,9 +159,9 @@ Para revisar si existe transmisión de momento se evalúa que $Mux$ no exceda de
 
 %Revisión de transmisión de momento en My
 \FPeval{\vuMin}{round(0.2*\vuPen*\dZ,2)}
- \FPifgt \vuMin \mxZ  \FPeval{\pruebaVer}{1} \else \FPeval{\pruebaVer}{2} \fi
+ \FPifgt \mxZ \vuMin  \FPeval{\pruebaVer}{1} \else \FPeval{\pruebaVer}{2} \fi
 Revisión si esto pasa, se pondra el valor de la prueba que es \pruebaVer
-\FPifgt \mxZ \vuMin  
+\ifthenelse{\pruebaVer=1}  
 	{
 	%Hay transmisión de momento
 	\begin{align*}
@@ -181,7 +188,7 @@ entonces si hay transmisión de momento, por lo que se requiere obtener
 		V_{max}=\frac{V}{A_{cr}}+\frac{\alpha M_x B}{J_c}=\frac{\vuPen}{\aCrit}+\frac{(\alphaX)(\mxZ)(\bZ)}{\jcX}=\vuMaXPen \text{ ton}
 	\end{align*}
 	} 
-\else
+%\else
 	{
 	%No hay transmisión de momento
 	\begin{align*}
@@ -195,13 +202,14 @@ entonces si hay transmisión de momento, por lo que se requiere obtener
 		V_{max}=\frac{V}{A_{cr}}=\frac{\vuPen}{\aCrit}=\vuMaXPen \text{ ton}
 	\end{align*}
   }
-\fi
+%\fi
 
 En la otra dirección se tiene
 
 %Revisión de transmisión de momento en My
-
-\FPifgt \myZ \vuMin  
+\FPifgt \myZ \vuMin  \FPeval{\pruebaVer}{1} \else \FPeval{\pruebaVer}{2} \fi
+%\FPifgt \myZ \vuMin  
+\ifthenelse{\pruebaVer=1}
 	{
 	%Hay transmisión de momento
 	\begin{align*}
@@ -228,7 +236,7 @@ entonces si hay transmisión de momento, por lo que se requiere obtener
 		V_{max}=\frac{V}{A_{cr}}+\frac{\alpha M_y L}{J_c}=\frac{\vuPen}{\aCrit}+\frac{(\alphaY)(\myZ)(\lZ)}{\jcY}=\vuMaXPenY \text{ ton}
 	\end{align*}
 	} 
-\else
+%\else
 	{
 	%No hay transmisión de momento
 	\begin{align*}
@@ -242,18 +250,98 @@ entonces si hay transmisión de momento, por lo que se requiere obtener
 		V_{max}=\frac{V}{A_{cr}}=\frac{\vuPen}{\aCrit}=\vuMaXPenY \text{ ton}
 	\end{align*}
   }
-\fi
+%\fi
 
-\vuMaXPenY
 
-\vuMaXPen
-
-\FPeval{\vuMaXPenXY}{min(\vuMaXPenY,\vuMaXPen)}
+\FPeval{\vuMaXPenXY}{max(\vuMaXPenY,\vuMaXPen)}
 Una vez obtenidos los cortantes máximos por penetración en ambas direcciones se toma el mayor el cual es
 
 \begin{align*}
 		V_{max}=\vuMaXPenXY \text{ ton/m$^2$}
 	\end{align*}
 
+Con base el Artículo 5.3.6.4 ecuación (5.3.36) el cortante máximo a penetración es:
 
+\FPeval{\vcrPen}{round(0.65*(\fc)^0.5*10,2)}
+
+
+\begin{align*}
+		V_{cr}=F_R\sqrt{f^{'}_{c}}=0.65\sqrt{\fc(100)}=\vcrPen \text{ ton/m$^2$}
+\end{align*}
+	
+\subsection{Revisión como viga ancha}
+\subsubsection{Momento}
+Para la revisión a momento, se tiene que los limites superiores e inferiores de cuantías son:
+
+%Cuantías máximas y mínimas
+\FPeval{\pmin}{round((0.7*root(2,\fc))/\fy,4)}
+\FPeval{\pmax}{round(\fcc/\fy*(6000*0.85)/(\fy+6000),4)}
+
+\begin{align*}
+	&\rho_{min}=\frac{0.7\sqrt{fc'}}{fy}                   =\frac{0.7\sqrt{\fc}}{\fy}                     =\pmin\\
+	&\rho_{max}=\frac{fc''}{fy}\frac{6000\beta}{fy+6000}   =\frac{\fcc}{\fy}\frac{6000(0.85)}{\fy+6000}   =\pmax
+\end {align*}
+
+Considerando que la cuantía es
+
+\begin{align*}
+	&\rho=\frac{A_s}{(B)(h)}
+\end {align*}
+
+donde $A_s$ es el área de acero, se tiene que las áreas máximas y mínimas considerando un metro de ancho son:
+
+%Áreas de acero máximas y mínimas
+\FPeval{\dZcm}{round(100*\dZ,2)}
+\FPeval{\asMin}{round(\pmin*100*\dZcm,2)}
+\FPeval{\asMax}{round(\pmax*100*\dZcm,2)}
+\begin{align*}
+	&A_{s_{min}}=\rho_{min}(100)(d)=\pmin(100)(\dZcm)= \asMin \text{ cm$^2$/m} \\
+	&A_{s_{max}}=\rho_{max}(100)(d)=\pmax(100)(\dZcm)= \asMax \text{ cm$^2$/m}
+\end{align*}
+
+De esto se puede deducir que el momento máximo permitido para la cuantía máxima de acero es:
+\FPeval{\mMaxPer}{round(0.9*\fcc*100*pow(2,\dZcm)/200000,2)}
+
+\begin{align*}
+	&M_{max}=\frac{0.9f^{''}_c b d^2}{2\times 10^5}=\frac{0.9(\fcc)( 100)( \dZcm)^2}{2\times 10^5}= \mMaxPer \text{ ton-m}
+\end{align*}
+
+Dado que es una fuerza repartida, el momento máximo se obtiene del paño del dado a la zapata por loq ue las distancias $x$ y $y$ son:
+\FPeval{\dxM}{round((\bZ-\caZ)/2,2)}
+\FPeval{\dyM}{round((\lZ-\cbZ)/2,2)}
+
+\begin{align*}
+	&x=\frac{B-c_1}{2}=\frac{(\bZ-\caZ)}{2}= \dxM \text{ m} \\
+	&y=\frac{L-c_2}{2}=\frac{(\lZ-\cbZ)}{2}= \dyM \text{ m} 
+\end{align*}
+
+Por lo que los momentos máximos son
+%Momentos
+\FPeval{\mMaxX}{round(\qD*\dxM^2/2,2)}
+\FPeval{\mMaxY}{round(\qD*\dyM^2/2,2)}
+
+\begin{align*}
+	&M_x=\frac{q_d x^2}{2}=\frac{(\qD)\dxM^2}{2}= \mMaxX \text{ ton-m} \\
+	&M_y=\frac{q_d y^2}{2}=\frac{(\qD)\dyM^2}{2}= \mMaxY \text{ ton-m} 
+\end{align*}
+
+El momento máximo en ambas direcciones es menor al límite por lo que se procede a obtener la cantidad de acero.
+
+%Acero
+\FPeval{\asTrX}{round((1-root(2,(1-2*100000*\mMaxX/(0.9*100*pow(2,\dZcm)*\fcc))))/(\fy/(100*\dZcm*\fcc)),2)}
+\FPeval{\asTrY}{round((1-root(2,(1-2*100000*\mMaxY/(0.9*100*pow(2,\dZcm)*\fcc))))/(\fy/(100*\dZcm*\fcc)),2)}
+
+\begin{align*}
+	&A_s=\frac{1-\sqrt{1-\frac{2M_r}{F_R(b)(d^2)(fc'')}}}{\frac{fy}{b(d)(fc'')}}\\
+	&A_{sx}=\frac{1-\sqrt{1-\frac{2(\mMaxX\times 10^5)}{0.9(100)(\dZcm^2)(\fcc)}}}{\frac{\fy}{100(\dZcm)(\fcc)}}=\asTrX \text{ cm$^2$}\\
+	&A_{sy}=\frac{1-\sqrt{1-\frac{2(\mMaxY\times 10^5)}{0.9(100)(\dZcm^2)(\fcc)}}}{\frac{\fy}{100(\dZcm)(\fcc)}}=\asTrY \text{ cm$^2$}
+\end {align*}
+
+por lo que se colocara un armado con varilla del \# \VarX \; a cada \distVarX \;cm en la dirección x y varilla del \# \VarY \;a cada \distVarY \;cm en la dirección y
+
+\subsubsection{Cortante}
+Para ser considerado como viga ancha se requiere que la realción largo espesor sea mayor a 4 por lo que 
+%Areas de varilla
+%\FPeval{\asVarX}{round(0.07917304\VarX^2,2)}
+%\FPeval{\asVarY}{round(0.07917304\VarX^2,2)}
 \end{document}
