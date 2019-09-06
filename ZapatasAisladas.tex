@@ -1,0 +1,259 @@
+\documentclass[11pt,a4paper,fleqn]{article}
+\usepackage[left=2.5cm, right=2.5cm, top=3cm, bottom=3cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{ifthen}
+\usepackage{amsmath} 
+\usepackage[nomessages]{fp} %Para las operaciones matemáticas
+\usepackage[spanish]{babel}	
+\spanishdecimal{.}
+\usepackage{amsmath,amsfonts,amsthm} % Math packages
+\begin{document}
+\newcommand\caZ{0.4}     % ancho de la columna
+\newcommand\cbZ{0.6}     % largo de la columna
+\newcommand\bZ{1.7}      % ancho de la zapata
+\newcommand\lZ{3.5}      % largo de la zapata
+\newcommand\dfZ{1.5}     % Profunidad del paño superior de la zapata
+\newcommand\hZ{0.75}     % Peralte de la zapata
+\newcommand\rZ{0.05}     % Recubrimiento
+\newcommand\gammaS{1.6}  % Peso específico del suelo
+\newcommand\fy{4200}     % Resistencia del acero
+\newcommand\fc{200}      % Resistencia del concreto
+\newcommand\qaS{20}      % Capacidad de carga del suelo
+\newcommand\mxZ{15}      % Momento alrdedeor del eje X
+\newcommand\myZ{6}       % Momento alrdedeor del eje Y
+\newcommand\pZ{90}       % Carga axial
+\newcommand\fcCarga{1.4} % Factor de carga
+
+%Peralte efectivo
+\FPeval{\dZ}{round(\hZ-\rZ,2)}
+%Compresión del concreto 
+\FPeval{\fcc}{round(0.85*\fc,2)}
+
+\section{Zapata aislada rectangular sujeta a flexo-compresión}
+\subsection{Datos de carga}
+A continuación se muestran las propiedades del suelo, la geometría de la zapata, las propiedades de los materiales y las cargas actuantes sin factorizar.
+\begin{align*}
+	&c_1=       \caZ    \text{\;m}                && \text{(Ancho de la columna)}\\
+	&c_2=       \cbZ    \text{\;m}                && \text{(Largo de la columna)}\\
+	&B=         \bZ     \text{\;m}                && \text{(Ancho de la zapata)}\\
+	&L=         \lZ     \text{\;m}                && \text{(Largo de la zapata)}\\
+	&d_f=       \dfZ    \text{\;m}                && \text{(Profunidad de la zapata)}\\
+	&h=         \hZ     \text{\;cm}               && \text{(Peralte de la zapata)}\\
+	&d=         \dZ     \text{\;cm}               && \text{(Peralte efectivo de la zapata)}\\
+	&r=         \rZ     \text{\;cm}               && \text{(Recubrimiento de la zapata)}\\
+	&\gamma_s=  \gammaS \text{\;ton/m$^3$}        && \text{(Peso espefícico del suelo)}\\
+	&f_y=       \fy     \text{\;kg/cm$^2$}        && \text{(Resistencia del acero)}\\
+	&f^{'}_c=   \fc     \text{\;kg/cm$^2$}        && \text{(Resistencia del concreto)}\\
+	&f^{''}_c=  0.85(\fc)=\fcc\text{\;kg/cm$^2$}  && \text{(Resistencia del concreto)}\\
+	&q_a=       \qaS    \text{\;ton/m$^2$}        && \text{(Capacidad de carga del suelo)}\\
+	&P=         \pZ     \text{\;ton}              && \text{(Fuerza axial actuante)} \\
+	&M_{x}=     \mxZ    \text{\;ton-m}            && \text{(Momento alrededor del eje x)}\\
+	&M_{y}=     \myZ    \text{\;ton-m}            && \text{(Momento alrededor del eje y)}	
+\end{align*}
+
+\subsection{Peso de la zapata}
+Para el cálculo de las presiones de la zapata se requiere obtener las presiones adicionales debido al peso propio de la zapata y del suelo
+%Peso del suelo
+\FPeval{\ppS}{round((\lZ*\bZ-(\caZ*\cbZ))*\dfZ*\gammaS,2)}
+%Peso de la zapata
+\FPeval{\ppZ}{round(\lZ*\bZ*\hZ*2.4,2)}
+%Peso del dado
+\FPeval{\ppD}{round(\caZ*\cbZ*\dfZ*2.4,2)}
+%Peso total
+\FPeval{\ppC}{round(\ppS+\ppZ+\ppD,2)}
+%Peso total
+\FPeval{\pU}{round(\pZ+\ppC,2)}
+
+\begin{align*}
+	Pp_{s}&=\left[LB-(c_1c_2)\right]d_f\gamma_s&=&\left[(\lZ)(\bZ)-(\caZ)(\cbZ)\right](\dfZ)(\gammaS)&=&\;\ppS \text{\;ton}\\
+	Pp_{z}&=L(B)(h)(2.4)&=&(\lZ)(\bZ)(\hZ)(2.4)&=&\;\ppZ \text{\;ton}\\
+	Pp_{d}&=c_1(c_2)(d_f)(2.4)&=&(\caZ)(\cbZ)(\dfZ)(2.4)&=&\;\ppD \text{\;ton}\\
+	Pp_{c}&=Pp_{s}+Pp_{z}+Pp_{d}&=&\ppS+\ppZ+\ppD&=&\;\ppC \text{\;ton}
+\end{align*}
+
+donde $Pp_{s}$ es el peso del suelo, $Pp_{z}$ es el peso de la zapata, $Pp_{d}$ es el peso del dado y $Pp_{c}$ es el peso de la cimentación. 
+Por lo que el peso total actuante es:
+
+\begin{align*}
+	P_{U}=P+Pp_{c}=\pZ+\ppC=\pU \text{ ton}
+\end{align*}
+
+\subsection{Presión actuante}
+Una vez obtenido la carga axial actuante debajo de la zapata aislada se obtienen las presiones máximas y mínimas como se muestra a continuación
+
+%Presión máxima y míminma
+\FPeval{\qMax}{round(\pU/(\bZ*\lZ)+6*\mxZ/(\bZ*pow(2,\lZ))+6*\myZ/(\lZ*pow(2,\bZ)),2)}
+\FPeval{\qMin}{round(\pU/(\bZ*\lZ)-6*\mxZ/(\bZ*pow(2,\lZ))-6*\myZ/(\lZ*pow(2,\bZ)),2)}
+
+\begin{align*}
+	q_{max}=\frac{P_{U}}{BL}+\frac{6M_x}{BL^2}+\frac{6M_y}{LB^2}=\frac{\pU}{(\bZ)(\lZ)}+\frac{6(\mxZ)}{\bZ(\lZ)^2}+\frac{6(\myZ)}{\lZ(\bZ)^2}=\qMax \text{ t/m$^2$}\\
+	q_{min}=\frac{P_{U}}{BL}-\frac{6M_x}{BL^2}-\frac{6M_y}{LB^2}=\frac{\pU}{(\bZ)(\lZ)}-\frac{6(\mxZ)}{\bZ(\lZ)^2}-\frac{6(\myZ)}{\lZ(\bZ)^2}=\qMin \text{ t/m$^2$}
+\end{align*}
+
+Sin embargo la presión de diseño se obtiene considerando que la presión es uniforme en una sección de la zapata, para ello primero se obtienen las excentricidades
+
+%Excentricidades
+\FPeval{\eX}{round(\myZ/\pU,2)}
+\FPeval{\eY}{round(\mxZ/\pU,2)}
+
+\begin{align*}
+	e_x=\frac{M_y}{P_U}=\frac{\myZ}{\pU}=\eX \text{ m}\\
+	e_y=\frac{M_x}{P_U}=\frac{\mxZ}{\pU}=\eY \text{ m}
+\end{align*}
+
+Esta excentricidad reduce las secciones de la zapata de tal manera que
+
+%Area reducida
+\FPeval{\bRedZ}{round(\bZ-2*\eX,2)}
+\FPeval{\lRedZ}{round(\lZ-2*\eY,2)}
+
+\begin{align*}
+	B'=B-2e_x=\bZ-2(\eX)=\bRedZ \text{ m}\\
+	L'=L-2e_y=\lZ-2(\eY)=\lRedZ \text{ m}
+\end{align*}
+
+por lo que la presión de diseño es
+%presión de diseño
+\FPeval{\qD}{round(\fcCarga*\pU/(\bRedZ*\lRedZ),2)}
+
+\begin{align*}
+	q_D=\frac{FC(P_U)}{B'L'}=\frac{\fcCarga(\pU)}{(\bRedZ)(\lRedZ)}=\qD \text{ t/m$^2$}
+\end{align*}
+
+\section{Revisión por penetración}
+Para la revisión a penetración se obtiene el área crítica
+
+%Área crítica
+\FPeval{\aCrit}{round(2*\dZ*(\caZ+\cbZ+2*\dZ),2)}
+
+\begin{align*}
+	A_{cr}=2d(c_1+c_2+2d)=2(\dZ)(\caZ+\cbZ+2(\dZ))=\aCrit \text{ m$^2$}
+\end{align*}
+
+En esta zona crítica existe una carga en contra de la carga axial . Dicha fuerza es
+
+%Fuerza a favor
+\FPeval{\pFavor}{round(\qD/\fcCarga*(\caZ+\dZ)*(\cbZ+\dZ),2)}
+\begin{align*}
+	P'=\frac{q_d}{FC}(c_1+d)(c_2+d)=\frac{\qD}{\fcCarga}(\caZ+\dZ)(\cbZ+\dZ)=\pFavor \text{ ton}
+\end{align*}
+
+Por lo que el cortante actuante es
+
+%Cortante por penetración
+\FPeval{\vuPen}{round((\pZ+\ppD-\pFavor)*\fcCarga,2)}
+\begin{align*}
+	V=FC(P+P_d-P')=\fcCarga(\pZ+\ppD-\pFavor)=\vuPen \text{ ton}
+\end{align*}
+
+
+
+Para revisar si existe transmisión de momento se evalúa que $Mux$ no exceda de $0.2Vu(d)$ por lo que
+
+%Revisión de transmisión de momento en My
+\FPeval{\vuMin}{round(0.2*\vuPen*\dZ,2)}
+ \FPifgt \vuMin \mxZ  \FPeval{\pruebaVer}{1} \else \FPeval{\pruebaVer}{2} \fi
+Revisión si esto pasa, se pondra el valor de la prueba que es \pruebaVer
+\FPifgt \mxZ \vuMin  
+	{
+	%Hay transmisión de momento
+	\begin{align*}
+		0.2Vu(d)=0.2(\vuPen)(\dZ)=\vuMin<\mxZ 
+	\end{align*}
+
+entonces si hay transmisión de momento, por lo que se requiere obtener 
+	%Jc dirección x
+	\FPeval{\jcX}{round(\dZ*pow(3,\caZ+\dZ)/6+(\caZ+\dZ)*pow(3,\dZ)/6+\dZ*(\cbZ+\dZ)*pow(2,(\caZ+\dZ))/2,2)}
+	%alfa dirección x
+	\FPeval{\alphaX}{round(1-1/(1+0.67*pow(0.5,(\caZ+\dZ)/(\cbZ+\dZ))),2)}
+	\begin{align*}
+		&J_c&=&\frac{d(c_1+d)^3}{6}+\frac{(c_1+d)(d)^3}{6}+\frac{d(c_2+d)(c_1+d)^2}{2}\\
+		&J_c&=&\frac{\dZ(\caZ+\dZ)^3}{6}+\frac{(\caZ+\dZ)(\dZ)^3}{6}+\frac{\dZ(\cbZ+\dZ)(\caZ+\dZ)^2}{2}=\jcX\\
+		&\alpha&=&1-\frac{1}{1+0.67\sqrt{(c_1+d)/(c_2+d)}}\\
+		&\alpha&=&1-\frac{1}{1+0.67\sqrt{(\caZ+\dZ)/(\cbZ+\dZ)}}=\alphaX
+	\end{align*}
+	
+	Con estos valores se obtiene el cortante máximo siendo
+	%Cortante máximo
+	\FPeval{\vuMaXPen}{round(\vuPen/\aCrit+\alphaX*\mxZ*\bZ/\jcX,2)}
+	
+	\begin{align*}
+		V_{max}=\frac{V}{A_{cr}}+\frac{\alpha M_x B}{J_c}=\frac{\vuPen}{\aCrit}+\frac{(\alphaX)(\mxZ)(\bZ)}{\jcX}=\vuMaXPen \text{ ton}
+	\end{align*}
+	} 
+\else
+	{
+	%No hay transmisión de momento
+	\begin{align*}
+		0.2Vu(d)=0.2(\vuPen)(\dZ)=\vuMin>\mxZ 
+	\end{align*}
+	Por lo que no hay transmisión de momentos, dando el cortante máximo como
+	
+	\FPeval{\vuMaXPen}{round(\vuPen/\aCrit,2)}
+	
+	\begin{align*}
+		V_{max}=\frac{V}{A_{cr}}=\frac{\vuPen}{\aCrit}=\vuMaXPen \text{ ton}
+	\end{align*}
+  }
+\fi
+
+En la otra dirección se tiene
+
+%Revisión de transmisión de momento en My
+
+\FPifgt \myZ \vuMin  
+	{
+	%Hay transmisión de momento
+	\begin{align*}
+		0.2Vu(d)=0.2(\vuPen)(\dZ)=\vuMin<\myZ 
+	\end{align*}
+
+entonces si hay transmisión de momento, por lo que se requiere obtener 
+	%Jc dirección x
+	\FPeval{\jcY}{round(\dZ*pow(3,\cbZ+\dZ)/6+(\cbZ+\dZ)*pow(3,\dZ)/6+\dZ*(\caZ+\dZ)*pow(2,(\cbZ+\dZ))/2,2)}
+	%alfa dirección x
+	\FPeval{\alphaY}{round(1-1/(1+0.67*pow(0.5,(\cbZ+\dZ)/(\caZ+\dZ))),2)}
+	\begin{align*}
+		&J_c&=&\frac{d(c_2+d)^3}{6}+\frac{(c_2+d)(d)^3}{6}+\frac{d(c_1+d)(c_2+d)^2}{2}\\
+		&J_c&=&\frac{\dZ(\cbZ+\dZ)^3}{6}+\frac{(\cbZ+\dZ)(\dZ)^3}{6}+\frac{\dZ(\caZ+\dZ)(\cbZ+\dZ)^2}{2}=\jcY\\
+		&\alpha&=&1-\frac{1}{1+0.67\sqrt{(c_2+d)/(c_1+d)}}\\
+		&\alpha&=&1-\frac{1}{1+0.67\sqrt{(\cbZ+\dZ)/(\caZ+\dZ)}}=\alphaY
+	\end{align*}
+	
+	Con estos valores se obtiene el cortante máximo siendo
+	%Cortante máximo
+	\FPeval{\vuMaXPenY}{round(\vuPen/\aCrit+\alphaY*\myZ*\lZ/\jcY,2)}
+	
+	\begin{align*}
+		V_{max}=\frac{V}{A_{cr}}+\frac{\alpha M_y L}{J_c}=\frac{\vuPen}{\aCrit}+\frac{(\alphaY)(\myZ)(\lZ)}{\jcY}=\vuMaXPenY \text{ ton}
+	\end{align*}
+	} 
+\else
+	{
+	%No hay transmisión de momento
+	\begin{align*}
+		0.2Vu(d)=0.2(\vuPen)(\dZ)=\vuMin>\myZ 
+	\end{align*}
+	Por lo que no hay transmisión de momentos, dando el cortante máximo como
+	
+	\FPeval{\vuMaXPenY}{round(\vuPen/\aCrit,2)}
+	
+	\begin{align*}
+		V_{max}=\frac{V}{A_{cr}}=\frac{\vuPen}{\aCrit}=\vuMaXPenY \text{ ton}
+	\end{align*}
+  }
+\fi
+
+\vuMaXPenY
+
+\vuMaXPen
+
+\FPeval{\vuMaXPenXY}{min(\vuMaXPenY,\vuMaXPen)}
+Una vez obtenidos los cortantes máximos por penetración en ambas direcciones se toma el mayor el cual es
+
+\begin{align*}
+		V_{max}=\vuMaXPenXY \text{ ton/m$^2$}
+	\end{align*}
+
+
+\end{document}
