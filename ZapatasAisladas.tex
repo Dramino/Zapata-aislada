@@ -7,13 +7,21 @@
 \usepackage[spanish]{babel}	
 \spanishdecimal{.}
 \usepackage{amsmath,amsfonts,amsthm} % Math packages
+\usepackage{tikz}
+\usetikzlibrary{arrows,decorations.markings,patterns,backgrounds,fit}
+\usepackage{xcolor}
+\definecolor{colorConcretoA}{rgb}{0.75, 0.75, 0.75}
+\definecolor{colorConcretoB}{rgb}{0.85, 0.85, 0.85}
+\definecolor{colorVarilla}{rgb}{0.45, 0.45, 0.45}
+
+
 \begin{document}
 \newcommand\caZ{0.4}     % ancho de la columna
 \newcommand\cbZ{0.6}     % largo de la columna
-\newcommand\bZ{1.7}      % ancho de la zapata
-\newcommand\lZ{3.5}      % largo de la zapata
+\newcommand\bZ{2.9}      % ancho de la zapata
+\newcommand\lZ{2.9}      % largo de la zapata
 \newcommand\dfZ{1.5}     % Profunidad del paño superior de la zapata
-\newcommand\hZ{0.75}     % Peralte de la zapata
+\newcommand\hZ{0.6}     % Peralte de la zapata
 \newcommand\rZ{0.05}     % Recubrimiento
 \newcommand\gammaS{1.6}  % Peso específico del suelo
 \newcommand\fy{4200}     % Resistencia del acero
@@ -39,24 +47,72 @@
 \section{Zapata aislada rectangular sujeta a flexo-compresión}
 \subsection{Datos de carga}
 A continuación se muestran las propiedades del suelo, la geometría de la zapata, las propiedades de los materiales y las cargas actuantes sin factorizar.
-\begin{align*}
-	&c_1=       \caZ    \text{\;m}                && \text{(Ancho de la columna)}\\
-	&c_2=       \cbZ    \text{\;m}                && \text{(Largo de la columna)}\\
-	&B=         \bZ     \text{\;m}                && \text{(Ancho de la zapata)}\\
-	&L=         \lZ     \text{\;m}                && \text{(Largo de la zapata)}\\
-	&d_f=       \dfZ    \text{\;m}                && \text{(Profunidad de la zapata)}\\
-	&h=         \hZ     \text{\;cm}               && \text{(Peralte de la zapata)}\\
-	&d=         \dZ     \text{\;cm}               && \text{(Peralte efectivo de la zapata)}\\
-	&r=         \rZ     \text{\;cm}               && \text{(Recubrimiento de la zapata)}\\
-	&\gamma_s=  \gammaS \text{\;ton/m$^3$}        && \text{(Peso espefícico del suelo)}\\
-	&f_y=       \fy     \text{\;kg/cm$^2$}        && \text{(Resistencia del acero)}\\
-	&f^{'}_c=   \fc     \text{\;kg/cm$^2$}        && \text{(Resistencia del concreto)}\\
-	&f^{''}_c=  0.85(\fc)=\fcc\text{\;kg/cm$^2$}  && \text{(Resistencia del concreto)}\\
-	&q_a=       \qaS    \text{\;ton/m$^2$}        && \text{(Capacidad de carga del suelo)}\\
-	&P=         \pZ     \text{\;ton}              && \text{(Fuerza axial actuante)} \\
-	&M_{x}=     \mxZ    \text{\;ton-m}            && \text{(Momento alrededor del eje x)}\\
-	&M_{y}=     \myZ    \text{\;ton-m}            && \text{(Momento alrededor del eje y)}	
-\end{align*}
+
+\hspace{1cm}
+\begin{tabular}{|lll|}
+\hline
+	$c_1=$&       \caZ    \text{\;m}                & \text{(Ancho de la columna)}\\
+	$c_2=$&       \cbZ    \text{\;m}                & \text{(Largo de la columna)}\\
+	$B=$&         \bZ     \text{\;m}                & \text{(Ancho de la zapata)}\\
+	$L=$&         \lZ     \text{\;m}                & \text{(Largo de la zapata)}\\
+	$d_f=$&       \dfZ    \text{\;m}                & \text{(Profunidad de la zapata)}\\
+	$h=$&         \hZ     \text{\;cm}               & \text{(Peralte de la zapata)}\\
+	$d=$&         \dZ     \text{\;cm}               & \text{(Peralte efectivo de la zapata)}\\
+	$r=$&         \rZ     \text{\;cm}               & \text{(Recubrimiento de la zapata)}\\
+	$\gamma_s=$&  \gammaS \text{\;ton/m$^3$}        & \text{(Peso espefícico del suelo)}\\
+	$f_y=$&       \fy     \text{\;kg/cm$^2$}        & \text{(Resistencia del acero)}\\
+	$f^{'}_c=$&   \fc     \text{\;kg/cm$^2$}        & \text{(Resistencia del concreto)}\\
+	$f^{''}_c=$&  0.85(\fc)=\fcc\text{\;kg/cm$^2$}  & \text{(Resistencia del concreto)}\\
+	$q_a=$&       \qaS    \text{\;ton/m$^2$}        & \text{(Capacidad de carga del suelo)}\\
+	$P=$&         \pZ     \text{\;ton}              & \text{(Fuerza axial actuante)} \\
+	$M_{x}=$&     \mxZ    \text{\;ton-m}            & \text{(Momento alrededor del eje x)}\\
+	$M_{y}=$&     \myZ    \text{\;ton-m}            & \text{(Momento alrededor del eje y)}\\
+	\hline	
+\end{tabular}
+\begin{figure}[hbt]
+\centering
+\begin{tikzpicture}[scale=1.5]
+
+	\filldraw [colorConcretoA](0,0) -- (3,0) -- (3,0.5) -- (1.75,0.5) -- (1.75,2) -- (1.25,2) -- (1.25,0.5) -- (0,0.5) -- (0,0);
+	\draw [black] (0,0) -- (3,0) -- (3,0.5) -- (1.75,0.5) -- (1.75,2) -- (1.25,2) -- (1.25,0.5) -- (0,0.5) -- (0,0);
+	
+	\draw[arrows=<->, thick]  (0.0,-0.2) -- node[below= 1pt] {\footnotesize B=\bZ} (3,-0.2) ;
+	\draw[arrows=<->, thick]  (-0.2,0.0) -- node[left= 1pt] {\footnotesize h=\hZ} (-0.2,0.5) ;
+	\draw[arrows=<->, thick]  (-0.2,0.5) -- node[left= 1pt] {\footnotesize $d_f$=\dfZ} (-0.2,2) ;
+	
+	\draw[arrows=->, thick]  (1,1.25) --  (1.25,1.25) ;
+	\draw[arrows=<-, thick]  (1.75,1.25) --  (2,1.25);
+	\node at (2.2,1.45) {\footnotesize $c_1$=\caZ} ;
+	%Suelo
+	\draw[brown] (0,2) -- (1.25,2);
+	\draw[brown] (1.75,2) -- (3,2);
+
+	\draw[arrows=->,-latex, thick]  (1.5,2.5) node[above= 1pt] {\footnotesize P=\pZ} --  (1.5,2) ; %Carga axial
+	\draw[arrows=->, thick] (1.2,2.2)  arc (180:0:0.3) node[right= 1pt] {\footnotesize $M_y$=\myZ} ;
+\end{tikzpicture}
+\hspace{1cm}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Planta
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[scale=1.5]
+	\filldraw [colorConcretoA](0,0) rectangle (3,3);
+	\draw [black](0,0) rectangle (3,3);
+	\filldraw [colorConcretoB](1.15,1.15) rectangle (1.85,1.85);
+	\draw [black](1.15,1.15) rectangle (1.85,1.85);
+	
+	\draw[arrows=<->, thick]  (0.0,-0.2) -- node[below= 1pt] {\footnotesize B=\bZ} (3,-0.2) ;
+	\draw[arrows=<->, thick]  (-0.2,0.0) -- node[left= 1pt] {\footnotesize L=\lZ} (-0.2,3) ;
+	
+	\draw[arrows=<->, thick]  (1.15,0.95) -- node[below= 1pt] {\footnotesize $c_1$=\caZ} (1.85,0.95) ;
+	\draw[arrows=<->, thick]  (0.95,1.15) -- node[left= 1pt] {\footnotesize $c_2$=\cbZ} (0.95,1.85) ;
+	
+	\draw[arrows=->, -latex,thick,red]  (1.5,1.8)  --  (1.5,2.2) ;
+	\draw[arrows=->, -latex,thick,red]  (1.5,2.2) node[right= 1pt] {\footnotesize $M_y$=\myZ} --  (1.5,2.35) ;
+	
+	\draw[arrows=->, -latex,thick,blue]  (1.8,1.5)  --  (2.2,1.5) ;
+	\draw[arrows=->, -latex,thick,blue]  (2.2,1.5) node[above= 1pt] {\footnotesize $M_x$=\mxZ} --  (2.35,1.5) ;
+\end{tikzpicture}
+\end{figure}
 
 \subsection{Peso de la zapata}
 Para el cálculo de las presiones de la zapata se requiere obtener las presiones adicionales debido al peso propio de la zapata y del suelo
@@ -92,12 +148,52 @@ Una vez obtenido la carga axial actuante debajo de la zapata aislada se obtienen
 \FPeval{\qMax}{round(\pU/(\bZ*\lZ)+6*\mxZ/(\bZ*pow(2,\lZ))+6*\myZ/(\lZ*pow(2,\bZ)),2)}
 \FPeval{\qMin}{round(\pU/(\bZ*\lZ)-6*\mxZ/(\bZ*pow(2,\lZ))-6*\myZ/(\lZ*pow(2,\bZ)),2)}
 
+\begin{figure}[hbt]
+\centering
+\begin{tikzpicture}[scale=1.5]
+
+	\filldraw [colorConcretoA](0,0) -- (3,0) -- (3,0.5) -- (1.75,0.5) -- (1.75,2) -- (1.25,2) -- (1.25,0.5) -- (0,0.5) -- (0,0);
+	\draw [black] (0,0) -- (3,0) -- (3,0.5) -- (1.75,0.5) -- (1.75,2) -- (1.25,2) -- (1.25,0.5) -- (0,0.5) -- (0,0);
+	
+\draw [blue] (0,-0.3) -- (3,-0.8);
+
+\draw[arrows=->,-latex, blue] (0.0,-0.30) -- (0.0,0)node[left= 1pt] {\footnotesize $q_{min}$=\qMin};
+\draw[arrows=->,-latex, blue] (0.2,-0.33) -- (0.2,0);
+\draw[arrows=->,-latex, blue] (0.4,-0.36) -- (0.4,0);
+\draw[arrows=->,-latex, blue] (0.6,-0.40) -- (0.6,0);
+\draw[arrows=->,-latex, blue] (0.8,-0.43) -- (0.8,0);
+\draw[arrows=->,-latex, blue] (1.0,-0.46) -- (1.0,0);
+\draw[arrows=->,-latex, blue] (1.2,-0.50) -- (1.2,0);
+\draw[arrows=->,-latex, blue] (1.4,-0.53) -- (1.4,0);
+\draw[arrows=->,-latex, blue] (1.6,-0.56) -- (1.6,0);
+\draw[arrows=->,-latex, blue] (1.8,-0.60) -- (1.8,0);
+\draw[arrows=->,-latex, blue] (2.0,-0.63) -- (2.0,0);
+\draw[arrows=->,-latex, blue] (2.2,-0.66) -- (2.2,0);
+\draw[arrows=->,-latex, blue] (2.4,-0.70) -- (2.4,0);
+\draw[arrows=->,-latex, blue] (2.6,-0.73) -- (2.6,0);
+\draw[arrows=->,-latex, blue] (2.8,-0.76) -- (2.8,0);
+\draw[arrows=->,-latex, blue] (3.0,-0.80) -- node[right= 1pt] {\footnotesize $q_{max}$=\qMax} (3.0,0)  ;
+
+\end{tikzpicture}
+\end{figure}
+
 \begin{align*}
 	q_{max}=\frac{P_{U}}{BL}+\frac{6M_x}{BL^2}+\frac{6M_y}{LB^2}=\frac{\pU}{(\bZ)(\lZ)}+\frac{6(\mxZ)}{\bZ(\lZ)^2}+\frac{6(\myZ)}{\lZ(\bZ)^2}=\qMax \text{ t/m$^2$}\\
 	q_{min}=\frac{P_{U}}{BL}-\frac{6M_x}{BL^2}-\frac{6M_y}{LB^2}=\frac{\pU}{(\bZ)(\lZ)}-\frac{6(\mxZ)}{\bZ(\lZ)^2}-\frac{6(\myZ)}{\lZ(\bZ)^2}=\qMin \text{ t/m$^2$}
 \end{align*}
 
-Sin embargo la presión de diseño se obtiene considerando que la presión es uniforme en una sección de la zapata, para ello primero se obtienen las excentricidades
+\FPeval{\qRel}{round(\qMax/\qaS,2)}
+Con estos valores se revisa la presión máxima.
+\begin{align*}
+		\frac{q_{max}}{q_{a}}=\frac{\qMax}{\qaS}=\qRel
+	\end{align*}
+	
+\FPifgt 1 \qRel  \textcolor{blue}{Por lo que se aceptan los dimensiones de la zapata.} \else \textcolor{red}{Por lo que se deben cambiar las dimensiones de la zapata.} \fi
+
+\FPifgt 0 \qMin   \; \textcolor{orange}{Por otro lado al ser la presión mínima menor a 0, se tienen tensiones en el terreno} \fi
+
+
+Para obtener la presión de diseño se considerando que ésta es uniforme en una sección de la zapata, para ello primero se obtienen las excentricidades
 
 %Excentricidades
 \FPeval{\eX}{round(\myZ/\pU,2)}
@@ -124,12 +220,34 @@ por lo que la presión de diseño es
 \FPeval{\qD}{round(\fcCarga*\pU/(\bRedZ*\lRedZ),2)}
 
 \begin{align*}
-	q_D=\frac{FC(P_U)}{B'L'}=\frac{\fcCarga(\pU)}{(\bRedZ)(\lRedZ)}=\qD \text{ t/m$^2$}
+	q_D=\frac{F_C(P_U)}{B'L'}=\frac{\fcCarga(\pU)}{(\bRedZ)(\lRedZ)}=\qD \text{ t/m$^2$}
 \end{align*}
+
+\begin{tikzpicture}[scale=1.5]
+	\filldraw [colorConcretoA](0,0) -- (3,0) -- (3,0.5) -- (1.75,0.5) -- (1.75,2) -- (1.25,2) -- (1.25,0.5) -- (0,0.5) -- (0,0); %Zapata
+	\draw [black] (0,0) -- (3,0) -- (3,0.5) -- (1.75,0.5) -- (1.75,2) -- (1.25,2) -- (1.25,0.5) -- (0,0.5) -- (0,0); % Contorno Zapata
+	\draw [blue] (0.6,-0.5) -- node[below= 1pt] {\footnotesize $q_{D}$=\qD}  (3,-0.5); %Texto
+	\foreach \x in {0.6,0.8,...,3} %Flechas
+	\draw[arrows=->,-latex, blue] (\x,-0.50) -- (\x,0);
+\end{tikzpicture}
 
 \section{Revisión por penetración}
 Para la revisión a penetración se obtiene el área crítica
 
+\begin{figure}[hbt]
+\centering
+\begin{tikzpicture}[scale=1.5]
+	%Zapata
+	\filldraw [colorConcretoA](0,0) rectangle (3,3);
+	\draw [black](0,0) rectangle (3,3);
+	%Dado
+	\filldraw [colorConcretoB](1.15,1.15) rectangle (1.85,1.85);
+	\draw [black](1.15,1.15) rectangle (1.85,1.85);
+	\draw [red,dashed,very thick](0.9,0.9) rectangle (2.1,2.1); %Area crítica
+	\draw[arrows=<->, thick]  (0.9,0.7) -- node[below= 1pt] {\footnotesize $c_1+d$} (2.1,0.7) ;
+	\draw[arrows=<->, thick]  (0.7,0.9) -- node[midway,sloped,above] {\footnotesize $c_2+d$} (0.7,2.1) ;
+\end{tikzpicture}
+\end{figure}
 %Área crítica
 \FPeval{\aCrit}{round(2*\dZ*(\caZ+\cbZ+2*\dZ),2)}
 
@@ -142,7 +260,7 @@ En esta zona crítica existe una carga en contra de la carga axial . Dicha fuerz
 %Fuerza a favor
 \FPeval{\pFavor}{round(\qD/\fcCarga*(\caZ+\dZ)*(\cbZ+\dZ),2)}
 \begin{align*}
-	P'=\frac{q_d}{FC}(c_1+d)(c_2+d)=\frac{\qD}{\fcCarga}(\caZ+\dZ)(\cbZ+\dZ)=\pFavor \text{ ton}
+	P'=\frac{q_d}{F_C}(c_1+d)(c_2+d)=\frac{\qD}{\fcCarga}(\caZ+\dZ)(\cbZ+\dZ)=\pFavor \text{ ton}
 \end{align*}
 
 Por lo que el cortante actuante es
@@ -150,7 +268,7 @@ Por lo que el cortante actuante es
 %Cortante por penetración
 \FPeval{\vuPen}{round((\pZ+\ppD-\pFavor)*\fcCarga,2)}
 \begin{align*}
-	V=FC(P+P_d-P')=\fcCarga(\pZ+\ppD-\pFavor)=\vuPen \text{ ton}
+	V=F_C(P+P_d-P')=\fcCarga(\pZ+\ppD-\pFavor)=\vuPen \text{ ton}
 \end{align*}
 
 
@@ -160,7 +278,7 @@ Para revisar si existe transmisión de momento se evalúa que $Mux$ no exceda de
 %Revisión de transmisión de momento en My
 \FPeval{\vuMin}{round(0.2*\vuPen*\dZ,2)}
  \FPifgt \mxZ \vuMin  \FPeval{\pruebaVer}{1} \else \FPeval{\pruebaVer}{2} \fi
-Revisión si esto pasa, se pondra el valor de la prueba que es \pruebaVer
+
 \ifthenelse{\pruebaVer=1}  
 	{
 	%Hay transmisión de momento
@@ -268,7 +386,17 @@ Con base el Artículo 5.3.6.4 ecuación (5.3.36) el cortante máximo a penetraci
 \begin{align*}
 		V_{cr}=F_R\sqrt{f^{'}_{c}}=0.65\sqrt{\fc(100)}=\vcrPen \text{ ton/m$^2$}
 \end{align*}
-	
+
+Una vez obtenidos la carga actuante y la capacidad del concreto se obtiene la relación de cortante actuante y resistente
+
+\FPeval{\penRel}{round(\vuMaXPenXY/\vcrPen,2)}
+\begin{align*}
+		\frac{V_u}{V_{cr}}=\frac{\vuMaXPenXY}{\vcrPen}=\penRel
+\end{align*}
+
+\FPifgt 1 \penRel  \textcolor{blue}{Por lo que  el peralte de la zapata es adecuado}. \else \textcolor{red}{Por lo que se debe aumentar el peralte de la zapata.} \fi
+
+
 \subsection{Revisión como viga ancha}
 \subsubsection{Momento}
 Para la revisión a momento, se tiene que los limites superiores e inferiores de cuantías son:
@@ -306,7 +434,37 @@ De esto se puede deducir que el momento máximo permitido para la cuantía máxi
 	&M_{max}=\frac{0.9f^{''}_c b d^2}{2\times 10^5}=\frac{0.9(\fcc)( 100)( \dZcm)^2}{2\times 10^5}= \mMaxPer \text{ ton-m}
 \end{align*}
 
-Dado que es una fuerza repartida, el momento máximo se obtiene del paño del dado a la zapata por loq ue las distancias $x$ y $y$ son:
+Para la revisión ante momento y cortante como viga ancha se considera un metro de ancho, además se considerá que el momento máximo ante la carga repartida al paño de la columna mientras que a cortante es a un peralte efectivo de distancia.
+
+\begin{figure}[hbt]
+\centering
+\begin{tikzpicture}[scale=1.5] %Dibujo de zapata
+	
+	\fill[colorConcretoA] (0,0) -- (3,0) -- (3,0.5) -- (1.75,0.5) -- (1.75,2.0) -- (1.25,2.0) -- (1.25,0.5) -- (0,0.5) -- (0,0);
+	\draw [black] (0,0) -- (3,0) -- (3,0.5) -- (1.75,0.5) -- (1.75,2) -- (1.25,2) -- (1.25,0.5) -- (0,0.5) -- (0,0);
+	
+	\draw [thick](0,0) -- (0,-3.0);
+	\draw [thick](3,0) -- (3,-3.0);
+	\draw [thick](1.5,0) -- (1.5,-3.0);
+	\draw [thick](0,-1.5) -- (3,-1.5) node [right=1pt]{$V(x)$}; 
+	\draw [thick](0,-2.5) -- (3,-2.5) node [right=1pt]{$M(x)$};
+	
+	\fill [blue](1.5,-1.5) -- (1.5,-1.0) -- (3,-1.5) -- (1.5,-1.5); %Cortante
+	\fill [red](3,-2.5) parabola (1.5,-3.0) |- (3,-2.5); %Momento
+	
+	\draw[arrows=<->,red]  (1.75,1) -- node [above= 1pt]{\footnotesize x} (3.0,1) ;
+	\draw [thick,dashed,red](1.75,0.7) -- (1.75,-3.0);
+	
+	\draw[arrows=<->,blue]  (1.75,0.7) -- node [above= 1pt]{\footnotesize d} (2.25,0.7) ;
+	\draw[arrows=<->,blue]  (2.25,0.7) -- node [above= 1pt]{\footnotesize x-d} (3,0.7) ;
+	\draw [thick,dashed,blue](2.25,0.7) -- (2.25,-3.0);
+	
+	\node[blue] at (2.6,-1.0) {\footnotesize $V_{max}$};
+	\node[red] at (1.8,-3.2) {\footnotesize $-M_{max}$};
+\end{tikzpicture}
+\end{figure}
+
+El momento máximo se obtiene del paño del dado a la zapata por lo que las distancias $x$ y $y$ son:
 \FPeval{\dxM}{round((\bZ-\caZ)/2,2)}
 \FPeval{\dyM}{round((\lZ-\cbZ)/2,2)}
 
@@ -339,9 +497,115 @@ El momento máximo en ambas direcciones es menor al límite por lo que se proced
 
 por lo que se colocara un armado con varilla del \# \VarX \; a cada \distVarX \;cm en la dirección x y varilla del \# \VarY \;a cada \distVarY \;cm en la dirección y
 
+\begin{figure}[hbt]
+\centering
+\begin{tikzpicture}[scale=1.5]
+	\filldraw [colorConcretoA](0,0) rectangle (3,3);
+	\draw [black](0,0) rectangle (3,3);
+	
+	
+	\foreach \x in {(0.5,0.3),(0.7,0.3),(0.9,0.3),(1.1,0.3),(1.3,0.3),(1.5,0.3),(1.7,0.3),(1.9,0.3),(2.1,0.3),(2.3,0.3),(2.5,0.3)}
+		{\filldraw [colorVarilla]\x rectangle +(0.05,2.4);
+		\draw [black]\x rectangle +(0.05,2.4);}
+		
+	\foreach \y in {(0.3,0.5),(0.3,0.7),(0.3,0.9),(0.3,1.1),(0.3,1.3),(0.3,1.5),(0.3,1.7),(0.3,1.9),(0.3,2.1),(0.3,2.3),(0.3,2.5)}
+		{\filldraw [colorVarilla]\y rectangle +(2.4,0.05);
+		\draw [black]\y rectangle +(2.4,0.05);}
+	
+
+	\draw[arrows=<->, thick]  (0.0,-0.2) -- node[below= 1pt] {\footnotesize \bZ} (3,-0.2) ;
+	\draw[arrows=<->, thick]  (-0.2,0.0) -- node[left= 1pt] {\footnotesize \lZ} (-0.2,3) ;
+	
+	\draw[arrows=<-, thick]  (2.7,1.55) -- (3.2,2.0) -- node[above= 1pt] {\footnotesize \#\VarX@\distVarX} (4,2.0) ;
+	\draw[arrows=<-, thick]  (2.55,2.7) -- (3.2,3.2) -- node[above= 1pt] {\footnotesize \#\VarY@\distVarY} (4,3.2) ;
+\end{tikzpicture}
+\hspace {1cm}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Armado Elevación
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[scale=1.5]
+
+	\filldraw [colorConcretoA](0,0) -- (3,0) -- (3,0.5) -- (1.75,0.5) -- (1.75,2) -- (1.25,2) -- (1.25,0.5) -- (0,0.5) -- (0,0);
+	\draw [black] (0,0) -- (3,0) -- (3,0.5) -- (1.75,0.5) -- (1.75,2) -- (1.25,2) -- (1.25,0.5) -- (0,0.5) -- (0,0);
+	
+	\draw[arrows=<->, thick]  (0.0,-0.2) -- node[below= 1pt] {\footnotesize \bZ} (3,-0.2) ;
+	\draw[arrows=<->, thick]  (-0.2,0.0) -- node[left= 1pt] {\footnotesize \hZ} (-0.2,0.5) ;
+	\draw[arrows=<->, thick]  (-0.2,0.5) -- node[left= 1pt] {\footnotesize \dfZ} (-0.2,2) ;
+	
+	\draw[arrows=->, thick]  (1,1.25) --  (1.25,1.25) ;
+	\draw[arrows=<-, thick]  (1.75,1.25) --  (2,1.25)node[above = 1pt] {\footnotesize \caZ} ;
+	
+	%Suelo
+	\draw[brown] (0,2) -- (1.25,2);
+	\draw[brown] (1.75,2) -- (3,2);
+		
+	%armado transversal
+	 \filldraw[blue] (0.2,0.05) rectangle (2.8,0.1);
+	 \draw[black] (0.2,0.05) rectangle (2.8,0.1);
+	
+	\filldraw[red] (0.2,0.4) rectangle (2.8,0.45);
+	 \draw[black] (0.2,0.4) rectangle (2.8,0.45);
+	
+	%armado longitudinal
+	\foreach \x in {0.3,0.5,...,2.7}{
+		\filldraw[magenta] (\x,0.15) circle (0.03);
+		\draw[black] (\x,0.15) circle (0.03);
+		\filldraw[cyan] (\x,0.35) circle (0.03);
+		\draw[black] (\x,0.35) circle (0.03);}
+		
+		\draw[arrows=<-, thick]  (2.1,0.35) -- (2.6,0.8) -- node[above=0.1pt] {\textcolor{cyan}{\footnotesize \#\VarY@\distVarY}} (3.3,0.8) ; %Superior
+		\draw[arrows=<-, thick]  (2.1,0.1) -- (2.6,-0.6) -- node[above=0.1pt] {\textcolor{magenta}{\footnotesize \#\VarY@\distVarY}} (3.3,-0.6) ; %Inferior
+		\draw[arrows=<-, thick]  (1.15,0.45) -- (0.6,0.8) -- node[above=0.1pt] {\textcolor{red}{\footnotesize \#\VarX@\distVarX}} (0,0.8) ; %Superior
+		\draw[arrows=<-, thick]  (1.15,0.05) -- (0.6,-0.6) -- node[above=0.1pt] {\textcolor{blue}{\footnotesize \#\VarX@\distVarX}} (0,-0.6) ; %Inferior
+\end{tikzpicture}
+
+\end{figure}
+
+
 \subsubsection{Cortante}
-Para ser considerado como viga ancha se requiere que la realción largo espesor sea mayor a 4 por lo que 
+La distancia donde se da el cortante máximo es a un peralte efectivo $d$ de la columna por lo que las distancias en las dos direcciones son:
+
+\FPeval{\dxV}{round(max((\bZ-\caZ)/2-\dZ,0),2)}
+\FPeval{\dyV}{round(max((\lZ-\cbZ)/2-\dZ,0),2)}
+
+\begin{align*}
+	&x=\frac{B-c_1}{2}-d=\frac{(\bZ-\caZ)}{2}-\dZ= \dxV \text{ m} \\
+	&y=\frac{L-c_2}{2}-d=\frac{(\lZ-\cbZ)}{2}-\dZ= \dyV \text{ m} 
+\end{align*}
+
+Por lo que los cortantes máximos son
+%Cortantes
+\FPeval{\vMaxX}{round(\qD*\dxV,2)}
+\FPeval{\vMaxY}{round(\qD*\dyV,2)}
+\FPeval{\vMaxXY}{max(\vMaxX,\vMaxY)}
+
+\begin{align*}
+	&V_x=q_d (x)=(\qD)(\dxV)= \vMaxX \text{ ton} \\
+	&V_y=q_d (y)=(\qD)(\dyV)= \vMaxY \text{ ton} 
+\end{align*}
+
+por lo que el cortante máximo a revisar es:
+
+\begin{align*}
+	&V_{max}=\vMaxXY \text{ ton} \\ 
+\end{align*}
+La resistencia a cortante para vigas anchas independientemente de su cuantía es
+
+\FPeval{\vCrZ}{round(0.75*0.5*(\fc)^0.5*100*\dZcm/1000,2)}
 %Areas de varilla
 %\FPeval{\asVarX}{round(0.07917304\VarX^2,2)}
 %\FPeval{\asVarY}{round(0.07917304\VarX^2,2)}
+\begin{align*}
+	&V_{cr}=F_R0.5\sqrt{f'c}bd=\frac{0.75(0.5)\sqrt{\fc}(100)(\dZcm)}{1000}=\vCrZ \text{ ton}
+\end{align*}
+
+por lo que la relación del cortante actuante y el resistente es
+\FPeval{\relVAncha}{round(\vMaxXY/\vCrZ,2)}
+\begin{align*}
+	&\frac{V_{max}}{V_{cr}}=\frac{\vMaxXY}{\vCrZ}=\relVAncha
+\end{align*}
+
+\FPifgt 1 \relVAncha \textcolor{blue}{El peralte de la zapata es adecuado.} \else \textcolor{red}{Se requiere aumentar el peralte de zapata} \fi
+
+%\FPifgt 1 \relVAncha \textcolor{blue}{El peralte de la zapata es adecuado.} \else \textcolor{red}{Por lo que se deben cambiar las dimensiones de la zapata.} \fi
 \end{document}
